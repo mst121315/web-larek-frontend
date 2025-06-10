@@ -15,8 +15,7 @@ export class CheckoutPresenter {
 
 	private handleStartCheckout(): void {
 		this.currentIndex = 0;
-		const presenter = this.steps[this.currentIndex];
-		presenter.process();
+		this.processStep();
 	}
 
 	private handleNextStep(): void {
@@ -24,10 +23,20 @@ export class CheckoutPresenter {
 		presenter.complete();
 		if (this.currentIndex < this.steps.length - 1) {
 			this.currentIndex++;
-			const presenter = this.steps[this.currentIndex];
-			presenter.process();
+			this.processStep();
 		} else {
-			console.log('Unexpected Step')
+			console.log('Unexpected Step');
 		}
+	}
+
+	private processStep(): void {
+		const presenter = this.steps[this.currentIndex];
+		this.setActiveStep(presenter);
+		presenter.process();
+	}
+
+	private setActiveStep(presenter: CheckoutStepPresenter): void {
+		this.steps.forEach(step => step.setIsActive(false));
+		presenter.setIsActive(true);
 	}
 }

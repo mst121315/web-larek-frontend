@@ -7,11 +7,11 @@ import { AbstractFormPopupView } from '@components/checkout/AbstractFormPopupVie
 
 export class CartStepPopupView extends AbstractFormPopupView {
 
-	constructor(modalContainerSelector: string, validator: CartValidator, private cartTemplateSelector: string, private cartItemTemplateSelector: string) {
-		super(modalContainerSelector, validator);
+	constructor(modalContainerSelector: string, private cartTemplateSelector: string) {
+		super(modalContainerSelector);
 	}
 
-	public render(cart: Cart): void {
+	public render(cart: Cart, cartItemElements: HTMLElement[]): void {
 		this.content.innerHTML = '';
 		const content = cloneTemplate<HTMLElement>(this.cartTemplateSelector);
 
@@ -22,31 +22,12 @@ export class CartStepPopupView extends AbstractFormPopupView {
 			events.emit('checkout:next');
 		});
 
-
 		subtotal.textContent = `${cart.subtotal} ${settings.currency}`;
 
-		cart.items.forEach((product: Product, index: number) => {
-			const cartItem = cloneTemplate<HTMLButtonElement>(this.cartItemTemplateSelector);
-
-			const itemIndex = cartItem.querySelector(bem('basket', 'item-index').class) as HTMLElement;
-			const title = cartItem.querySelector(bem('card', 'title').class) as HTMLElement;
-			const price = cartItem.querySelector(bem('card', 'price').class) as HTMLElement;
-			const deleteButton = cartItem.querySelector(bem('basket', 'item-delete').class) as HTMLButtonElement;
-
-			itemIndex.textContent = `${index + 1}.`;
-			title.textContent = product.title;
-			price.textContent = `${product.price} ${settings.currency}`;
-			setElementData(deleteButton, { id: product.id });
-			deleteButton.addEventListener('click', (e) => {
-				const button	 = e.target as HTMLButtonElement;
-				const id = button.dataset.id;
-				events.emit('cart:delete', {id});
-			});
-
-			cartItems.appendChild(cartItem);
+		cartItemElements.forEach((cartItemElement: HTMLElement) => {
+			cartItems.appendChild(cartItemElement);
 		});
 
 		this.content.append(content);
-		this.updateNextButtonState();
 	}
 }

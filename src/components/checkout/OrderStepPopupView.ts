@@ -6,10 +6,9 @@ import { AbstractFormPopupView } from '@components/checkout/AbstractFormPopupVie
 export class OrderStepPopupView extends AbstractFormPopupView {
 	constructor(
 		modalContainerSelector: string,
-		validator: CheckoutStepValidator,
 		private checkoutOrderStepTemplate: string
 	) {
-		super(modalContainerSelector, validator);
+		super(modalContainerSelector);
 	}
 
 	public render(quote: Quote): void {
@@ -21,7 +20,6 @@ export class OrderStepPopupView extends AbstractFormPopupView {
 		this.content.append(form);
 
 		this.processFormSubmit(form);
-		this.updateNextButtonState();
 	}
 
 	private processPaymentButtons(form: HTMLElement, quote: Quote): void {

@@ -6,3 +6,4 @@ export * from './shared/events';
 export * from './CartIconView';
 export * from './ProductGridView';
 export * from './ProductPopupView';
+export * from './ProductGridItemView';

@@ -6,3 +6,4 @@ export * from './OrderStepPopupView';
 export * from './ContactsStepPopupView';
 export * from './SuccessStepPopupView';
 export * from './CartStepPopupView';
+export * from './CartItemView';

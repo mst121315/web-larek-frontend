@@ -1,8 +1,10 @@
 import { QuoteModel } from '@models';
-import { Quote, CheckoutStepValidator } from '@types';
+import { Quote } from '@types';
+import { AbstractValidator } from './AbstractValidator';
 
-export class CartValidator implements CheckoutStepValidator {
+export class CartValidator extends AbstractValidator {
 	constructor(private model: QuoteModel) {
+		super()
 	}
 
 	public isValid(): boolean {

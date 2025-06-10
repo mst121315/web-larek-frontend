@@ -1,14 +1,17 @@
 import { QuoteModel } from '@models';
-import { CheckoutStepPresenter, Quote } from '@types';
-import { ContactsStepPopupView, events } from '@components';
+import { CheckoutStepValidator, Quote } from '@types';
+import { ContactsStepPopupView, ContactsValidator, events } from '@components';
+import { AbstractStepPresenter } from '@presenters/checkout/AbstractStepPresenter';
 
-export class ContactsStepPresenter implements CheckoutStepPresenter {
-	constructor(private model: QuoteModel, private view: ContactsStepPopupView) {}
+export class ContactsStepPresenter extends AbstractStepPresenter {
+	constructor(private model: QuoteModel, private view: ContactsStepPopupView, private validator: CheckoutStepValidator) {
+		super();
+	}
 
 	public init(): void {
 		events.on('checkout:email:set', this.handleSetEmail.bind(this));
 		events.on('checkout:phone:set', this.handleSetPhone.bind(this));
-		events.on('quote:update', this.view.updateNextButtonState.bind(this.view));
+		events.on('quote:update', this.validateView.bind(this));
 	}
 
 	private handleSetEmail({ email }: { email: string }): void {
@@ -26,7 +29,18 @@ export class ContactsStepPresenter implements CheckoutStepPresenter {
 	public process(): void {
 		const quote: Quote = this.model.getQuote();
 		this.view.render(quote);
+		const formFields = this.view.getFormFields();
+		(this.validator as ContactsValidator).setFields(formFields);
+
 		this.view.open();
+		this.validateView();
+	}
+
+	private validateView(): void {
+		if (this.isActive) {
+			this.view.updateNextButtonState(this.validator.isValid());
+			this.view.showErrors(this.validator.getErrors());
+		}
 	}
 
 	public complete (): void {

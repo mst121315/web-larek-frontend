@@ -1,9 +1,10 @@
 import { Product } from '@types';
-import { settings, CDN_URL } from '../utils/constants';
+import { settings, CDN_URL, API_URL } from '../utils/constants';
 import { cloneTemplate, bem, ensureElement } from '../utils/utils';
 import { ModalView } from '@components/ModalView'
 import { events } from '@components/shared/events';
 import { getProductClass } from '../utils/helper/product';
+import { CartModel } from '../models/CartModel';
 
 export class ProductPopupView extends ModalView {
 	private title: HTMLElement;
@@ -12,8 +13,9 @@ export class ProductPopupView extends ModalView {
 	private description: HTMLElement;
 	private price: HTMLElement;
 	private button: HTMLButtonElement;
-
-	constructor(modalContainerSelector: string, private templateSelector: string) {
+	
+	
+	constructor(modalContainerSelector: string, private templateSelector: string, private cartModel: CartModel) {
 		super(ensureElement(modalContainerSelector));
 	}
 
@@ -41,10 +43,13 @@ export class ProductPopupView extends ModalView {
 		this.description.textContent = product.description;
 		this.price.textContent = `${product.price} ${settings.currency}`;
 
-		if (product.price > 0) {
+		const cart = this.cartModel.getCart();
+        const inCart = cart.items.some(item => item.id === product.id);
+		if (product.price > 0 || inCart ) {
 			this.button.disabled = false;
 		}
 
+		
 		this.button.addEventListener('click', () => {
 			events.emit('cart:add', product);
 			this.close();

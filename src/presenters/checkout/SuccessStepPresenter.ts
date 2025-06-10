@@ -1,9 +1,11 @@
 import { QuoteModel, OrderModel } from '@models';
-import { CheckoutStepPresenter } from '@types';
 import { SuccessStepPopupView } from '@components';
+import { AbstractStepPresenter } from '@presenters/checkout/AbstractStepPresenter';
 
-export class SuccessStepPresenter implements CheckoutStepPresenter {
-	constructor(private quoteModel: QuoteModel, private orderModel: OrderModel, private view: SuccessStepPopupView) {}
+export class SuccessStepPresenter extends AbstractStepPresenter {
+	constructor(private quoteModel: QuoteModel, private orderModel: OrderModel, private view: SuccessStepPopupView) {
+		super();
+	}
 
 	public init(): void {
 	}

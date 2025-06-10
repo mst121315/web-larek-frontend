@@ -6,25 +6,26 @@ import { AbstractFormPopupView } from '@components/checkout/AbstractFormPopupVie
 
 export class ContactsStepPopupView extends AbstractFormPopupView {
 
+	private formFields: HTMLElement[] = [];
+
 	constructor(
 		modalContainerSelector: string,
-		validator: CheckoutStepValidator,
 		private checkoutContactsStepTemplate: string
 	) {
-		super(modalContainerSelector, validator);
+		super(modalContainerSelector);
 	}
 
 	public render(quote: Quote): void {
 		this.content.innerHTML = '';
+		this.formFields = [];
 		const form = cloneTemplate<HTMLElement>(this.checkoutContactsStepTemplate);
 		const emailField = this.processEmailField(form, quote);
 		const phoneField = this.processPhoneField(form, quote);
 		this.content.append(form);
-		(this.validator as ContactsValidator).setFields([emailField, phoneField]);
+		this.formFields.push(emailField, phoneField);
 		this.nextButton = form.querySelector(bem('contacts', 'button').class) as HTMLButtonElement;
 
 		this.processFormSubmit(form);
-		this.updateNextButtonState();
 	}
 
 	private processEmailField(form: HTMLElement, quote: Quote): HTMLInputElement {
@@ -57,5 +58,9 @@ export class ContactsStepPopupView extends AbstractFormPopupView {
 		});
 
 		return phoneField;
+	}
+
+	public getFormFields(): HTMLElement[] {
+		return this.formFields;
 	}
 }
