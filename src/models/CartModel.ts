@@ -33,4 +33,11 @@ export class CartModel {
 	private getTotal(items: Product[]): number {
 		return items.reduce((total, item) => total + item.price, 0);
 	}
+
+	public isInCard(product: Product): boolean {
+		const cart = this.storage.getCart();
+		const isInCart = cart.items.some((item) => item.id === product.id);
+
+		return isInCart;
+	}
 }

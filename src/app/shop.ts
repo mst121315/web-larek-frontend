@@ -21,8 +21,8 @@ const productGridItemView = new ProductGridItemView(selectors.productGridItemTem
 const productPresenter = new ProductPresenter(productModel, productGridView, productGridItemView);
 productPresenter.init();
 
-const productPopupView = new ProductPopupView(selectors.modalContainer, selectors.productPopupViewTemplate, cartModel);
-const productPopupPresenter = new ProductPopupPresenter(productModel, productPopupView);
+const productPopupView = new ProductPopupView(selectors.modalContainer, selectors.productPopupViewTemplate);
+const productPopupPresenter = new ProductPopupPresenter(productModel, productPopupView, cartModel);
 productPopupPresenter.init();
 
 const cartIconView = new CartIconView(selectors.cartIcon);
